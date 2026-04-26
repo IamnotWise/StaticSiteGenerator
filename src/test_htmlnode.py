@@ -23,11 +23,6 @@ class TestHTMLNode(unittest.TestCase):
     def test_leaf_to_html_h1(self):
         node = LeafNode("h1", "Prologue")
         self.assertEqual(node.to_html(), "<h1>Prologue</h1>")
-    
-    def test_leaf_to_html_a(self):
-        node = LeafNode("a", "click me", {"href": "https://google.com"})
-        self.assertEqual(node.to_html(), '<a href="https://google.com">click me</a>')
-
     def test_to_html_with_children(self):
         child_node = LeafNode("span", "child")
         parent_node = ParentNode("div", [child_node])
@@ -41,5 +36,13 @@ class TestHTMLNode(unittest.TestCase):
             parent_node.to_html(),
             "<div><span><b>grandchild</b></span></div>",
         )
+    def test_parent_with_empty_children(self):
+        node = ParentNode("div", [])
+        self.assertEqual(node.to_html(), "<div></div>")
+    def test_leaf_to_html_a(self):
+        node = LeafNode("a", "click me", {"href": "https://google.com"})
+        self.assertEqual(node.to_html(), '<a href="https://google.com">click me</a>')
+
+   
 if __name__ == "__main__":
     unittest.main()
