@@ -1,6 +1,6 @@
 import unittest
 
-from delimiter import split_nodes_delimiter, split_nodes_images, split_nodes_link
+from delimiter import split_nodes_delimiter, split_nodes_images, split_nodes_link, text_to_text_nodes
 from textnode import TextNode, TextType
 
 class TestDelimiter(unittest.TestCase):
@@ -62,6 +62,20 @@ class TestDelimiter(unittest.TestCase):
                 TextNode(
                     "second link", TextType.links, "https://www.facebook.com"
                 ),
+            ],
+            new_nodes,
+        )
+    def test_text_to_text_nodes(self):
+        text = "This is a *bold* text with an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://www.google.com)"
+        new_nodes = text_to_text_nodes(text)
+        self.assertListEqual(
+            [
+                TextNode("This is a ", TextType.plain_text),
+                TextNode("bold", TextType.bold_text),
+                TextNode(" text with an ", TextType.plain_text),
+                TextNode("image", TextType.images, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and a ", TextType.plain_text),
+                TextNode("link", TextType.links, "https://www.google.com"),
             ],
             new_nodes,
         )
