@@ -5,8 +5,8 @@ from textnode import TextNode, TextType
 
 class TestDelimiter(unittest.TestCase):
     def test_split_nodes_delimiter_bold(self):
-        old_nodes = [TextNode("This is a *bold* text", TextType.plain_text)]
-        new_nodes = split_nodes_delimiter(old_nodes, "*", TextType.bold_text)
+        old_nodes = [TextNode("This is a **bold** text", TextType.plain_text)]
+        new_nodes = split_nodes_delimiter(old_nodes, "**", TextType.bold_text)
         self.assertEqual(new_nodes[0].text, "This is a ")
         self.assertEqual(new_nodes[0].text_type, TextType.plain_text)
         self.assertEqual(new_nodes[1].text, "bold")
@@ -66,7 +66,7 @@ class TestDelimiter(unittest.TestCase):
             new_nodes,
         )
     def test_text_to_text_nodes(self):
-        text = "This is a *bold* text with an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://www.google.com)"
+        text = "This is a **bold** text with an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://www.google.com)"
         new_nodes = text_to_text_nodes(text)
         self.assertListEqual(
             [

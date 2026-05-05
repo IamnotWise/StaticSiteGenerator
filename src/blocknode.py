@@ -1,4 +1,5 @@
 from enum import Enum
+import re
 
 class BlockType(Enum):
     PARAGRAPH = "paragraph"
@@ -11,13 +12,10 @@ class BlockType(Enum):
 def block_to_block_type(markdown):
     lines = markdown.split("\n")
 
-    if (
-        1 <= len(lines[0]) - len(lines[0].lstrip("#")) <= 6
-        and lines[0][len(lines[0]) - len(lines[0].lstrip("#")):].startswith(" ")
-    ):
-        return BlockType.HEADING
+    if re.match(r"^#{1,6} ", markdown):
+        return BlockType.HEADING            
 
-    if markdown.startswith("```\n") and markdown.endswith("\n```"):
+    if markdown.startswith("```") and markdown.endswith("```"):
         return BlockType.CODE
 
     if all(line.startswith(">") for line in lines):
