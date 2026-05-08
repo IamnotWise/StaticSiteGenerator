@@ -1,5 +1,4 @@
-from pagegeneration import generate_page
-from textnode import TextNode, TextType
+from pagegeneration import generate_pages_recursive
 import os, shutil
 
 def copy_static():
@@ -7,7 +6,7 @@ def copy_static():
         shutil.rmtree('public')
     shutil.copytree('static', 'public')
     #testing page generation
-    generated_page = generate_page('content/index.md','template.html','public/index.html')
+    generate_pages_recursive('content', 'template.html', 'public')
        
 def main():
     copy_static()
