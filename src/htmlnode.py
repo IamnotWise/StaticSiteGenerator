@@ -55,5 +55,8 @@ class ParentNode(HTMLNode):
         
         result = ""
         for child in self.children:
+            print(f"parent: {self.tag}")
+            print(f"child_type: {type(child)}")
+            print(f"child: {child}")
             result += child.to_html()
         return f"<{self.tag}>{result}</{self.tag}>"

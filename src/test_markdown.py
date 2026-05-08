@@ -1,6 +1,6 @@
 import unittest
 
-from markdown import markdown_to_blocks, markdown_to_html_node
+from markdown import markdown_to_blocks, markdown_to_html_node, extract_title
 
 
 class TestMarkdown(unittest.TestCase):
@@ -58,4 +58,9 @@ the **same** even with inline stuff
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
-    
+    def test_extract_title(self):
+        md = """
+        # This is the title
+         """
+        title = extract_title(md)
+        self.assertEqual(title, "This is the title")

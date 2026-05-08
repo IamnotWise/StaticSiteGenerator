@@ -36,17 +36,27 @@ def markdown_to_html_node(markdown):
             code_leaf = text_node_to_html_node(raw_text_node)
             code_node = ParentNode("code", [code_leaf])
             node = ParentNode("pre", [code_node])
+        elif block_type == BlockType.QUOTE:
+            childrent = text_to_children(block.lstrip("> ").replace("\n> ", "\n"))
+            node = ParentNode("blockquote", childrent)
         elif block_type == BlockType.UNORDERED_LIST:
             items = block.split("\n")
-            children = [ParentNode("li", item.lstrip("- ").strip()) for item in items]
-            node = ParentNode("ul", children)
+            li_nodes = []
+            for item in items:
+                item_text = item.lstrip("- ").strip()
+                children = text_to_children(item_text)
+                li_nodes.append(ParentNode("li", children))
+            node = ParentNode("ul", li_nodes)
         elif block_type == BlockType.ORDERED_LIST:
             items = block.split("\n")
-            children = [ParentNode("li", item.lstrip("0123456789. ").strip()) for item in items]
-            node = ParentNode("ol", children)
+            li_nodes = []
+            for item in items:
+                item_text = item.lstrip("0123456789. ").strip()
+                children = text_to_children(item_text)
+                li_nodes.append(ParentNode("li", children))
+            node = ParentNode("ol", li_nodes)
         else:
-            text = block.replace("\n", " ")
-            children = text_to_children(text)
+            children = text_to_children(block.replace("\n", " "))
             node = ParentNode("p", children)
         parent_node.children.append(node)
     return parent_node
@@ -56,3 +66,10 @@ def text_to_children(text):
     for i, node in enumerate(text_nodes):
         text_nodes[i] = text_node_to_html_node(node)
     return text_nodes
+def extract_title(markdown):
+    heading = markdown.strip().split('\n')[0]
+    if not heading:
+        raise Exception("Markdown cannot be empty")
+    if not heading.startswith("# "):
+        raise Exception("Markdown must begin with # and cannot be empty")
+    return heading.lstrip("#").strip()
