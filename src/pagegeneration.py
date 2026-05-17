@@ -3,7 +3,8 @@ from markdown import extract_title, markdown_to_html_node
 import os
 
 
-def generate_page(from_path, template_path, dest_path):
+
+def generate_page(from_path, template_path, dest_path, basepath):
     #Page geneartion message
     print(f"Generating page from {from_path} to {dest_path} using template {template_path}")
     #Read the markdown file and template file
@@ -19,6 +20,10 @@ def generate_page(from_path, template_path, dest_path):
     #Replace the {{content}} and {{title}} in the template with the html and title
     template_file = template_file.replace("{{ Content }}", html)
     template_file = template_file.replace("{{ Title }}", title)
+
+    template_file = template_file.replace('href="/', f'href="{basepath}')
+    template_file = template_file.replace('src="/', f'src="{basepath}')
+
     final_html = template_file
     #Write the final html to the dest path
     dest_dir = os.path.dirname(dest_path)
@@ -28,12 +33,12 @@ def generate_page(from_path, template_path, dest_path):
         file.write(final_html)
     print(f"Final_html: {final_html}")
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     entries = os.listdir(dir_path_content)
     for entry in entries:
         full_entry_path = os.path.join(dir_path_content, entry)
         if os.path.isfile(full_entry_path):
             if full_entry_path.endswith('.md'):
-                generate_page(full_entry_path, template_path, os.path.join(dest_dir_path, entry.replace('.md', '.html')))
+                generate_page(full_entry_path, template_path, os.path.join(dest_dir_path, entry.replace('.md', '.html')),basepath)
         else:
-            generate_pages_recursive(full_entry_path, template_path, os.path.join(dest_dir_path, entry))
+            generate_pages_recursive(full_entry_path, template_path, os.path.join(dest_dir_path, entry), basepath)
